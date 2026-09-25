@@ -653,7 +653,6 @@ def render_home_page():
 
     # ── PAGE ASSEMBLY ────────────────────────────────────────────
 
-    render_nav()
     render_hero()
     render_path_cards()
     render_how_it_works()
