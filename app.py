@@ -123,6 +123,8 @@ def render_home_page():
     .fs-brand-name span { color: #A78BFA; }
     .fs-brand-sub { font-size: 0.68rem; color: #6B7280; letter-spacing: 0.04em; margin-top: 2px; }
     .fs-navlinks { display: flex; gap: 2rem; font-size: 0.86rem; color: #9CA3AF; font-weight: 500; }
+    .fs-navlinks a { color: #9CA3AF; text-decoration: none; transition: color 0.15s ease; }
+    .fs-navlinks a:hover { color: #E5E7EB; }
     @media (max-width: 720px) { .fs-navlinks { display: none; } }
 
     /* ── Hero ── */
@@ -367,6 +369,29 @@ def render_home_page():
         padding: 0 1.5rem;
     }
 
+    /* ── About / System Portfolio ── */
+    .fs-about-lead { color: #9CA3AF; font-size: 0.94rem; line-height: 1.7; max-width: 760px; margin: 0 auto 2.2rem auto; text-align: center; }
+    .fs-skill-badges { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-bottom: 2.6rem; }
+    .fs-skill-badge {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.09);
+        border-radius: 999px; padding: 0.45rem 0.95rem; font-size: 0.78rem;
+        color: #D1D5DB; font-weight: 500;
+    }
+    .fs-skill-badge .check { color: #34D399; }
+    .fs-tech-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 1rem; margin-bottom: 2.6rem; }
+    @media (max-width: 860px) { .fs-tech-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 560px) { .fs-tech-grid { grid-template-columns: 1fr 1fr; } }
+    .fs-tech-card {
+        text-align: center; padding: 1.1rem 0.6rem; border-radius: 14px;
+        background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);
+    }
+    .fs-tech-card .icon { font-size: 1.4rem; }
+    .fs-tech-card .name { color: #F3F4F6; font-weight: 700; font-size: 0.84rem; margin-top: 0.3rem; }
+    .fs-tech-card .tag { color: #6B7280; font-size: 0.72rem; margin-top: 0.1rem; }
+    .fs-about-groups { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; }
+    @media (max-width: 860px) { .fs-about-groups { grid-template-columns: 1fr; } }
+
     /* ── Footer ── */
     .fs-footer {
         border-top: 1px solid rgba(255,255,255,0.06);
@@ -385,14 +410,14 @@ def render_home_page():
     # ── SECTION FUNCTIONS ────────────────────────────────────────
 
     def render_nav():
-        st.markdown("""
+        st.markdown(f"""
         <div class="fs-nav">
             <div class="fs-brand">
                 <div class="fs-brand-name">◈ FinSight <span>AI</span></div>
                 <div class="fs-brand-sub">FINANCIAL INTELLIGENCE PLATFORM</div>
             </div>
             <div class="fs-navlinks">
-                <span>Markets</span><span>Intelligence</span><span>About</span>
+                <a href="{STOCK_APP_URL}" target="_self">Markets</a><a href="{MF_APP_URL}" target="_self">Intelligence</a><a href="#fs-about">About</a>
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -570,6 +595,66 @@ def render_home_page():
         """, unsafe_allow_html=True)
 
 
+    def render_about_section():
+        skills = [
+            "Data Cleaning & Wrangling", "Exploratory Data Analysis", "Business Intelligence",
+            "Data Visualization", "Statistical Analysis", "Financial Analytics",
+            "Streamlit Development", "Plotly Visualization", "Time-Series Analysis",
+            "Risk Profiling Engine", "Goal-Based Allocation", "Portfolio Construction",
+            "Wealth Projection Modeling", "KPI Dashboard Design", "Responsive UI/UX",
+            "Glassmorphism Design", "Session State Management", "Production Code Quality",
+        ]
+        skill_html = "".join(f'<div class="fs-skill-badge"><span class="check">✔</span>{s}</div>' for s in skills)
+
+        tech = [
+            ("🐍", "Python 3", "Core Language"),
+            ("📊", "Streamlit", "Web App Framework"),
+            ("📈", "Plotly", "Interactive Charting"),
+            ("🐼", "Pandas", "Data Manipulation"),
+            ("🔢", "NumPy", "Numerical Computing"),
+            ("🎨", "CSS3", "Custom Styling"),
+        ]
+        tech_html = "".join(
+            f'<div class="fs-tech-card"><div class="icon">{icon}</div>'
+            f'<div class="name">{name}</div><div class="tag">{tag}</div></div>'
+            for icon, name, tag in tech
+        )
+
+        st.markdown(f"""
+        <div class="fs-section" id="fs-about">
+            <div class="fs-section-head">
+                <div class="fs-eyebrow">About</div>
+                <h2>One System. Two Engines.</h2>
+            </div>
+            <p class="fs-about-lead">
+                FinSight AI is a single financial intelligence system spanning manual market
+                exploration and automated fund recommendations — built end-to-end with Python,
+                Streamlit and Plotly, reflecting skills across data engineering, quantitative
+                finance and full-stack analytics.
+            </p>
+            <div class="fs-skill-badges">{skill_html}</div>
+            <div class="fs-section-head" style="margin-bottom: 1.4rem;">
+                <div class="fs-eyebrow">Technology Stack</div>
+            </div>
+            <div class="fs-tech-grid">{tech_html}</div>
+            <div class="fs-about-groups">
+                <div class="fs-card">
+                    <div class="fs-card-label">MANUAL MODE</div>
+                    <h3 style="font-size:1.15rem;">Stock Intelligence</h3>
+                    <p class="desc">300+ global stocks across 20 countries, with OHLCV market
+                    data, country analytics and interactive market-overview insights.</p>
+                </div>
+                <div class="fs-card">
+                    <div class="fs-card-label">AUTOMATION MODE</div>
+                    <h3 style="font-size:1.15rem;">MF Recommendation Engine</h3>
+                    <p class="desc">A rule-based quantitative pipeline — risk assessment, goal-based
+                    allocation, fund filtering and ranking — across a full mutual fund universe.</p>
+                </div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+
     def render_footer():
         st.markdown("""
         <div class="fs-footer">
@@ -591,6 +676,7 @@ def render_home_page():
     render_comparison()
     render_stats()
     render_cta_band()
+    render_about_section()
     render_footer()
 
 
@@ -946,13 +1032,11 @@ def render_stock_page():
     """, unsafe_allow_html=True)
 
     # ── TABS ─────────────────────────────────────────────────────
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    tab1, tab2, tab3, tab4 = st.tabs([
         "📊 Stock Explorer",
         "🌍 Country Analytics",
         "📉 Market Overview",
-        "🗃️ Data Quality",
         "💡 Market Insights",
-        "🏆 Portfolio",
     ])
 
     # ════════════════════════════════════════════════════════════
@@ -1179,75 +1263,16 @@ def render_stock_page():
         st.plotly_chart(fig4, use_container_width=True)
 
     # ════════════════════════════════════════════════════════════
-    # TAB 4 – DATA QUALITY
+    # TAB 4 – MARKET INSIGHTS
     # ════════════════════════════════════════════════════════════
     with tab4:
-        st.markdown('<div class="section-header">🗃️ Dataset Summary & Quality Score</div>', unsafe_allow_html=True)
-
+        # Dataset quality score (used in the Coverage Quality insight below)
         missing_count = df.isnull().sum().sum()
         dup_count     = df.duplicated().sum()
         completeness  = round(100 - (missing_count / df.size * 100), 1)
         uniqueness    = round(100 - (dup_count / len(df) * 100), 1)
         quality_score = round((completeness * 0.5 + uniqueness * 0.5), 1)
 
-        c1, c2, c3 = st.columns([1,1,1])
-
-        with c1:
-            st.markdown(f"""
-            <div class="glass-card" style="text-align:center;">
-                <div class="quality-score">{quality_score}</div>
-                <div style="font-size:1.1rem; font-weight:700; color:#34d399; margin-top:0.2rem;">Excellent Quality</div>
-                <div class="quality-label">Dataset Quality Score / 100</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with c2:
-            stats_rows = [
-                ("Total Rows", f"{len(df):,}"),
-                ("Total Columns", f"{len(df.columns)}"),
-                ("Duplicate Rows", f"{dup_count}"),
-                ("Date Range", f"{date_min} → {date_max}"),
-            ]
-            rows_html = "".join([f"<tr><td style='color:rgba(255,255,255,0.5);padding:0.4rem 0;'>{k}</td><td style='font-weight:600;color:#fff;'>{v}</td></tr>" for k,v in stats_rows])
-            st.markdown(f"""
-            <div class="glass-card">
-                <div style="font-size:0.9rem; font-weight:600; color:#a78bfa; margin-bottom:0.8rem;">📋 Dataset Statistics</div>
-                <table style="width:100%; border-collapse:collapse;">{rows_html}</table>
-            </div>
-            """, unsafe_allow_html=True)
-
-        with c3:
-            # Bar gauges
-            metrics = {"Completeness": completeness, "Uniqueness": uniqueness, "Coverage": 100.0}
-            fig = go.Figure()
-            for name, val in metrics.items():
-                color = "#34d399" if val >= 95 else "#facc15" if val >= 80 else "#f87171"
-                fig.add_trace(go.Bar(x=[val], y=[name], orientation="h",
-                    marker_color=color, width=0.5, showlegend=False,
-                    text=f"{val:.1f}%", textposition="inside", insidetextanchor="middle"))
-            fig.update_layout(**PLOTLY_THEME, title="Quality Dimensions", height=220,
-                xaxis=dict(range=[0,100]), barmode="stack")
-            st.plotly_chart(fig, use_container_width=True)
-
-        st.markdown('<div class="section-header">🔍 Interactive Data Preview</div>', unsafe_allow_html=True)
-        preview_stock = st.selectbox("Filter preview by stock:", ["All"] + all_stocks, key="preview_sel")
-        preview_df = df if preview_stock == "All" else df[df["Stock_Name"] == preview_stock]
-        st.dataframe(preview_df.tail(200).reset_index(drop=True), use_container_width=True, height=400)
-
-        # Column type info
-        with st.expander("📐 Schema & Column Types"):
-            schema_df = pd.DataFrame({
-                "Column": df.columns,
-                "Type": [str(d) for d in df.dtypes],
-                "Non-Null": [df[c].notna().sum() for c in df.columns],
-                "Unique": [df[c].nunique() for c in df.columns],
-            })
-            st.dataframe(schema_df, use_container_width=True)
-
-    # ════════════════════════════════════════════════════════════
-    # TAB 5 – MARKET INSIGHTS
-    # ════════════════════════════════════════════════════════════
-    with tab5:
         st.markdown('<div class="section-header">💡 Dynamic Market Insights</div>', unsafe_allow_html=True)
 
         # Auto-generate 12 insights
@@ -1334,85 +1359,14 @@ def render_stock_page():
         </div>
         """, unsafe_allow_html=True)
 
-    # ════════════════════════════════════════════════════════════
-    # TAB 6 – PORTFOLIO / RECRUITER
-    # ════════════════════════════════════════════════════════════
-    with tab6:
-        st.markdown('<div class="section-header">🏆 What This Dashboard Demonstrates</div>', unsafe_allow_html=True)
-        st.markdown('<p style="color:rgba(255,255,255,0.55); margin-bottom:1.5rem;">This dashboard showcases a professional-grade financial analytics platform built with Python, Streamlit, and Plotly — reflecting skills across data engineering, analytics, and full-stack BI development.</p>', unsafe_allow_html=True)
-
-        badges = [
-            "✅ Data Cleaning & Wrangling",
-            "✅ Exploratory Data Analysis",
-            "✅ Business Intelligence",
-            "✅ Data Visualization",
-            "✅ Statistical Analysis",
-            "✅ Financial Analytics",
-            "✅ Streamlit Development",
-            "✅ Plotly Visualization",
-            "✅ Time-Series Analysis",
-            "✅ Candlestick Charting",
-            "✅ Volatility Modeling",
-            "✅ Correlation Analysis",
-            "✅ Moving Averages",
-            "✅ KPI Dashboard Design",
-            "✅ Responsive UI/UX",
-            "✅ Performance Caching",
-            "✅ Glassmorphism Design",
-            "✅ Multi-Country Analytics",
-            "✅ Dynamic Insights Engine",
-            "✅ Production Code Quality",
-        ]
-        badge_html = " ".join([f'<span class="badge">{b}</span>' for b in badges])
-        st.markdown(f'<div class="badge-grid">{badge_html}</div>', unsafe_allow_html=True)
-
-        st.markdown("<br>", unsafe_allow_html=True)
-
-        # Tech stack
-        st.markdown('<div class="section-header">🛠️ Technology Stack</div>', unsafe_allow_html=True)
-        stack = [
-            ("🐍 Python 3", "Core Language", "#3b82f6"),
-            ("📊 Streamlit", "Web App Framework", "#f43f5e"),
-            ("📉 Plotly", "Interactive Charting", "#8b5cf6"),
-            ("🐼 Pandas", "Data Manipulation", "#10b981"),
-            ("🔢 NumPy", "Numerical Computing", "#f59e0b"),
-            ("🎨 CSS3", "Custom Styling", "#06b6d4"),
-        ]
-        cols = st.columns(len(stack))
-        for i, (icon_name, desc, color) in enumerate(stack):
-            cols[i].markdown(f"""
-            <div class="glass-card" style="text-align:center; border-top: 3px solid {color};">
-                <div style="font-size:1.5rem;">{icon_name.split()[0]}</div>
-                <div style="font-weight:700; color:#fff; margin-top:0.3rem; font-size:0.9rem;">{' '.join(icon_name.split()[1:])}</div>
-                <div style="font-size:0.75rem; color:rgba(255,255,255,0.4);">{desc}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        # Dataset scale
-        st.markdown("<br>", unsafe_allow_html=True)
-        st.markdown('<div class="section-header">📊 Dataset Scope</div>', unsafe_allow_html=True)
-        scope_cols = st.columns(4)
-        scope_items = [
-            ("300", "Global Stocks", "#a78bfa"),
-            ("20", "Countries", "#60a5fa"),
-            (f"{total_rows:,}", "Data Records", "#34d399"),
-            ("9", "OHLCV Columns", "#fb923c"),
-        ]
-        for col, (val, label, color) in zip(scope_cols, scope_items):
-            col.markdown(f"""
-            <div class="kpi-card" style="text-align:center; border-top: 3px solid {color};">
-                <div style="font-size:2.2rem; font-weight:900; color:{color};">{val}</div>
-                <div style="font-size:0.82rem; color:rgba(255,255,255,0.5); margin-top:0.2rem;">{label}</div>
-            </div>
-            """, unsafe_allow_html=True)
-
-        # Footer
-        st.markdown("""
-        <br>
-        <div style="text-align:center; padding: 2rem; color:rgba(255,255,255,0.25); font-size:0.8rem; border-top: 1px solid rgba(255,255,255,0.06);">
-            📈 Global Stock Intelligence Dashboard &nbsp;|&nbsp; Built with Streamlit & Plotly &nbsp;|&nbsp; Data: 2025–2026
-        </div>
-        """, unsafe_allow_html=True)
+    # Footer (full breakdown of skills, tech stack & dataset scope now lives
+    # in the common "About" section on the home page)
+    st.markdown("""
+    <br>
+    <div style="text-align:center; padding: 2rem; color:rgba(255,255,255,0.25); font-size:0.8rem; border-top: 1px solid rgba(255,255,255,0.06);">
+        📈 Global Stock Intelligence Dashboard &nbsp;|&nbsp; Built with Streamlit & Plotly &nbsp;|&nbsp; Data: 2025–2026
+    </div>
+    """, unsafe_allow_html=True)
 
 def render_mf_page():
     # ─────────────────────────────────────────────────────────────
@@ -2122,8 +2076,8 @@ def render_mf_page():
             st.markdown(f"""<div class="kpi-card orange"><div class="kpi-label">Funds Analysed</div>
             <div class="kpi-value">{len(df):,}</div><div class="kpi-sub">Equity · Hybrid · Debt</div></div>""", unsafe_allow_html=True)
 
-        tab1, tab2, tab3, tab4, tab5 = st.tabs([
-            "🎯 Your Plan", "🏆 Recommendations", "📈 Wealth Journey", "🔎 Fund Explorer", "🏆 Portfolio",
+        tab1, tab2, tab3, tab4 = st.tabs([
+            "🎯 Your Plan", "🏆 Recommendations", "📈 Wealth Journey", "🔎 Fund Explorer",
         ])
 
         # ═══════════════ TAB 1 — YOUR PLAN ═══════════════
@@ -2423,120 +2377,65 @@ def render_mf_page():
             st.dataframe(explorer[cols].head(100), use_container_width=True, hide_index=True, height=480)
             st.caption(f"Showing {min(len(explorer), 100):,} of {len(explorer):,} matching funds.")
 
-        # ═══════════════ TAB 5 — PORTFOLIO ═══════════════
-        with tab5:
-            st.markdown('<div class="section-header">🏆 What This Dashboard Demonstrates</div>', unsafe_allow_html=True)
-            st.markdown(
-                '<div style="color:rgba(255,255,255,.65);font-size:.92rem;max-width:900px;">'
-                'This recommendation engine showcases a professional-grade personal-finance analytics '
-                'platform built with Python, Streamlit, and Plotly — reflecting skills across quantitative '
-                'finance, data engineering, and full-stack app development.</div>',
-                unsafe_allow_html=True,
-            )
+        # ---------- HOW YOUR RECOMMENDATION IS GENERATED ----------
+        # (kept outside the tabs now that the "Portfolio" showcase tab has
+        # been removed; skills/tech-stack/dataset-scope content now lives in
+        # the common "About" section on the home page)
+        st.markdown('<div class="section-header">🔬 How Your Recommendation Is Generated</div>', unsafe_allow_html=True)
+        st.markdown("""
+        <div class="glass-card">
+            <div style="font-weight:800;color:#fff;">Quantitative Recommendation Engine</div>
+            <div class="insight-text" style="margin-top:.7rem;">
+                Your Inputs → Risk Assessment → Risk Score → Goal + Horizon → Asset Allocation
+                → Fund Filtering → Risk Compatibility → Fund Quality → Portfolio Ranking.
+                This is a rule-based, quantitative pipeline — not a machine-learning model.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
 
-            skills = [
-                "Data Cleaning & Wrangling", "Exploratory Data Analysis", "Business Intelligence",
-                "Data Visualization", "Statistical Analysis", "Financial Analytics",
-                "Streamlit Development", "Plotly Visualization", "Risk Profiling Engine",
-                "Goal-Based Allocation", "Portfolio Construction", "Wealth Projection Modeling",
-                "KPI Dashboard Design", "Responsive UI/UX", "Glassmorphism Design",
-                "Multi-Step Wizard UX", "Session State Management", "Production Code Quality",
-            ]
-            badges_html = "".join(
-                f'<div class="skill-badge"><span class="check">✔</span>{s}</div>' for s in skills
-            )
-            st.markdown(f'<div class="skill-badges">{badges_html}</div>', unsafe_allow_html=True)
-
-            st.markdown('<div class="section-header">🛠️ Technology Stack</div>', unsafe_allow_html=True)
-            tech = [
-                ("🐍", "Python 3", "Core Language"),
-                ("📊", "Streamlit", "Web App Framework"),
-                ("📈", "Plotly", "Interactive Charting"),
-                ("🐼", "Pandas", "Data Manipulation"),
-                ("🔢", "NumPy", "Numerical Computing"),
-                ("🎨", "CSS3", "Custom Styling"),
-            ]
-            tech_html = "".join(
-                f'<div class="tech-card"><div class="tech-icon">{icon}</div>'
-                f'<div class="tech-name">{name}</div><div class="tech-tag">{tag}</div></div>'
-                for icon, name, tag in tech
-            )
-            st.markdown(f'<div class="tech-grid">{tech_html}</div>', unsafe_allow_html=True)
-
-            st.markdown('<div class="section-header">📊 Dataset Scope</div>', unsafe_allow_html=True)
-            n_funds = len(df) if DATA_OK else 0
-            n_amcs = df["amc_name"].nunique() if DATA_OK and "amc_name" in df.columns else 0
-            n_categories = df["sub_category"].nunique() if DATA_OK and "sub_category" in df.columns else 0
-            n_metrics = 8  # std dev, beta, sharpe, sortino, 3Y returns, expense ratio, fund quality score, risk score
-            d1, d2, d3, d4 = st.columns(4)
-            with d1:
-                st.markdown(f"""<div class="kpi-card purple"><div class="kpi-label">Total Funds</div>
-                <div class="kpi-value">{n_funds:,}</div><div class="kpi-sub">Across all AMCs</div></div>""", unsafe_allow_html=True)
-            with d2:
-                st.markdown(f"""<div class="kpi-card blue"><div class="kpi-label">AMCs Covered</div>
-                <div class="kpi-value">{n_amcs:,}</div><div class="kpi-sub">Fund houses</div></div>""", unsafe_allow_html=True)
-            with d3:
-                st.markdown(f"""<div class="kpi-card green"><div class="kpi-label">Fund Categories</div>
-                <div class="kpi-value">{n_categories:,}</div><div class="kpi-sub">Sub-categories tracked</div></div>""", unsafe_allow_html=True)
-            with d4:
-                st.markdown(f"""<div class="kpi-card orange"><div class="kpi-label">Metrics / Fund</div>
-                <div class="kpi-value">{n_metrics}</div><div class="kpi-sub">Risk & performance stats</div></div>""", unsafe_allow_html=True)
-
-            st.markdown('<div class="section-header">🔬 How Your Recommendation Is Generated</div>', unsafe_allow_html=True)
+        rc1, rc2 = st.columns(2)
+        with rc1:
             st.markdown("""
             <div class="glass-card">
-                <div style="font-weight:800;color:#fff;">Quantitative Recommendation Engine</div>
-                <div class="insight-text" style="margin-top:.7rem;">
-                    Your Inputs → Risk Assessment → Risk Score → Goal + Horizon → Asset Allocation
-                    → Fund Filtering → Risk Compatibility → Fund Quality → Portfolio Ranking.
-                    This is a rule-based, quantitative pipeline — not a machine-learning model.
+                <div style="font-weight:800;color:#fff;">Risk Engine Weights</div><br>
+                <div class="insight-text">
+                    Loss reaction — 25%<br>What matters more — 20%<br>Investment experience — 15%<br>
+                    Income stability — 15%<br>Comfort with fluctuations — 15%<br>Primary priority — 10%
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        with rc2:
+            st.markdown("""
+            <div class="glass-card">
+                <div style="font-weight:800;color:#fff;">Fund Ranking Weights</div><br>
+                <div class="insight-text">
+                    Risk compatibility — 35%<br>Fund quality — 25%<br>3Y category-relative return — 15%<br>
+                    Sharpe — 10%<br>Sortino — 10%<br>Expense ratio — 5%
                 </div>
             </div>
             """, unsafe_allow_html=True)
 
-            c1, c2 = st.columns(2)
-            with c1:
-                st.markdown("""
-                <div class="glass-card">
-                    <div style="font-weight:800;color:#fff;">Risk Engine Weights</div><br>
-                    <div class="insight-text">
-                        Loss reaction — 25%<br>What matters more — 20%<br>Investment experience — 15%<br>
-                        Income stability — 15%<br>Comfort with fluctuations — 15%<br>Primary priority — 10%
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-            with c2:
-                st.markdown("""
-                <div class="glass-card">
-                    <div style="font-weight:800;color:#fff;">Fund Ranking Weights</div><br>
-                    <div class="insight-text">
-                        Risk compatibility — 35%<br>Fund quality — 25%<br>3Y category-relative return — 15%<br>
-                        Sharpe — 10%<br>Sortino — 10%<br>Expense ratio — 5%
-                    </div>
-                </div>
-                """, unsafe_allow_html=True)
-
-            st.markdown("""
-            <div class="glass-card">
-                <div style="font-weight:800;color:#fff;">Metrics used by the engine</div>
-                <div class="insight-text" style="margin-top:.6rem;">
-                    Standard Deviation · Beta · Sharpe · Sortino · 3Y Returns · Expense Ratio ·
-                    Fund Quality Score · Risk Score
-                </div>
+        st.markdown("""
+        <div class="glass-card">
+            <div style="font-weight:800;color:#fff;">Metrics used by the engine</div>
+            <div class="insight-text" style="margin-top:.6rem;">
+                Standard Deviation · Beta · Sharpe · Sortino · 3Y Returns · Expense Ratio ·
+                Fund Quality Score · Risk Score
             </div>
-            """, unsafe_allow_html=True)
+        </div>
+        """, unsafe_allow_html=True)
 
-            st.markdown("""
-            <div class="glass-card">
-                <div style="font-weight:800;color:#fff;">⚠️ Current model limitations</div>
-                <div class="insight-text" style="margin-top:.6rem;">
-                    This version uses a point-in-time fund snapshot. It does not incorporate historical
-                    NAV time series, maximum drawdown, rolling volatility, VaR, benchmark tracking error,
-                    tax effects, exit loads, or live market conditions. The output is a quantitative
-                    research prototype and should not be treated as individualized financial advice.
-                </div>
+        st.markdown("""
+        <div class="glass-card">
+            <div style="font-weight:800;color:#fff;">⚠️ Current model limitations</div>
+            <div class="insight-text" style="margin-top:.6rem;">
+                This version uses a point-in-time fund snapshot. It does not incorporate historical
+                NAV time series, maximum drawdown, rolling volatility, VaR, benchmark tracking error,
+                tax effects, exit loads, or live market conditions. The output is a quantitative
+                research prototype and should not be treated as individualized financial advice.
             </div>
-            """, unsafe_allow_html=True)
+        </div>
+        """, unsafe_allow_html=True)
 
         # ---------- DISCLAIMER ----------
         st.markdown('<div class="section-header">⚠️ Disclaimer</div>', unsafe_allow_html=True)
