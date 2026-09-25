@@ -408,21 +408,6 @@ def render_home_page():
 
 
     # ── SECTION FUNCTIONS ────────────────────────────────────────
-
-    def render_nav():
-        st.markdown(f"""
-        <div class="fs-nav">
-            <div class="fs-brand">
-                <div class="fs-brand-name">◈ FinSight <span>AI</span></div>
-                <div class="fs-brand-sub">FINANCIAL INTELLIGENCE PLATFORM</div>
-            </div>
-            <div class="fs-navlinks">
-                <a href="{STOCK_APP_URL}" target="_self">Markets</a><a href="{MF_APP_URL}" target="_self">Intelligence</a><a href="#fs-about">About</a>
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
-
     def render_hero():
         st.markdown("""
         <div class="fs-hero">
