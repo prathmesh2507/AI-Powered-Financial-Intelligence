@@ -4,16 +4,13 @@
 #   • stock_app.py  (Manual Mode — Stock Intelligence)
 #   • mf_app.py     (Automation Mode — MF Recommendation Engine)
 #
-# This file does NOT import, execute, or modify stock_app.py
-# or mf_app.py in any way. It only links out to their deployed
-# URLs. Stack: Streamlit only.
+# Native multipage launcher:
+#   • pages/stock_app.py
+#   • pages/mf_app.py
+# Navigation is handled by Streamlit's native multipage routing.
 # ============================================================
 
 import streamlit as st
-
-# ── ROUTING CONSTANTS ───────────────────────────────────────
-STOCK_APP_URL = "https://global-stock-intelligence-dashboard-kt2yprnaklgpyef5ikcpcj.streamlit.app/"
-MF_APP_URL = "https://personalized-mutual-fund-advisor-mrbtzxaa2xfunen6tc9tme.streamlit.app/"
 
 # ── PAGE CONFIG ──────────────────────────────────────────────
 st.set_page_config(
@@ -225,6 +222,54 @@ header { background: transparent !important; }
 
 .fs-card-foot { font-size: 0.78rem; color: #6B7280; margin-top: 0.9rem; text-align: center; }
 
+
+/* ── Native Streamlit navigation buttons ── */
+.fs-nav-btn {
+    margin-top: auto;
+}
+.fs-nav-btn a {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-decoration: none !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    padding: 0.85rem 1.4rem !important;
+    border-radius: 12px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+.fs-nav-btn.purple a {
+    background: linear-gradient(90deg, #A78BFA, #60A5FA) !important;
+    color: #0B1020 !important;
+}
+.fs-nav-btn.green a {
+    background: linear-gradient(90deg, #34D399, #22D3EE) !important;
+    color: #0B1020 !important;
+}
+.fs-nav-btn.purple a:hover {
+    box-shadow: 0 10px 30px rgba(167,139,250,0.4) !important;
+    transform: translateY(-2px);
+}
+.fs-nav-btn.green a:hover {
+    box-shadow: 0 10px 30px rgba(52,211,153,0.35) !important;
+    transform: translateY(-2px);
+}
+.fs-cta-native {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 0.4rem;
+}
+.fs-cta-native .stPageLink {
+    min-width: 230px;
+}
+.fs-cta-native a {
+    border-radius: 12px !important;
+    font-weight: 700 !important;
+}
+
 /* ── How it works ── */
 .fs-steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
 @media (max-width: 780px) { .fs-steps { grid-template-columns: 1fr; } }
@@ -379,7 +424,7 @@ def render_hero():
 
 
 def render_path_cards():
-    st.markdown(f"""
+    st.markdown("""
     <div class="fs-section" style="padding-top: 0.5rem;">
         <div class="fs-cards">
             <div class="fs-card purple">
@@ -394,10 +439,6 @@ def render_path_cards():
                     <span class="fs-chip">Interactive Charts</span>
                     <span class="fs-chip">Market Analytics</span>
                 </div>
-                <a class="fs-cta" href="{STOCK_APP_URL}" target="_self">
-                    Explore Stock Intelligence <span class="arrow">→</span>
-                </a>
-                <div class="fs-card-foot">For investors who want to analyze the market themselves.</div>
             </div>
             <div class="fs-card green">
                 <div class="fs-card-icon">🤖</div>
@@ -411,14 +452,41 @@ def render_path_cards():
                     <span class="fs-chip">Fund Recommendations</span>
                     <span class="fs-chip">Wealth Projection</span>
                 </div>
-                <a class="fs-cta" href="{MF_APP_URL}" target="_self">
-                    Start AI Recommendation <span class="arrow">→</span>
-                </a>
-                <div class="fs-card-foot">For users who want guidance instead of manually analyzing markets.</div>
             </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
+
+    # Native Streamlit navigation — these open local pages, not deployed URLs.
+    col1, col2 = st.columns(2, gap="large")
+
+    with col1:
+        st.markdown('<div class="fs-nav-btn purple">', unsafe_allow_html=True)
+        st.page_link(
+            "pages/stock_app.py",
+            label="Explore Stock Intelligence →",
+            icon="📈",
+            use_container_width=True,
+        )
+        st.markdown(
+            '<div class="fs-card-foot">For investors who want to analyze the market themselves.</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown("</div>", unsafe_allow_html=True)
+
+    with col2:
+        st.markdown('<div class="fs-nav-btn green">', unsafe_allow_html=True)
+        st.page_link(
+            "pages/mf_app.py",
+            label="Start AI Recommendation →",
+            icon="🤖",
+            use_container_width=True,
+        )
+        st.markdown(
+            '<div class="fs-card-foot">For users who want guidance instead of manually analyzing markets.</div>',
+            unsafe_allow_html=True,
+        )
+        st.markdown("</div>", unsafe_allow_html=True)
 
 
 def render_how_it_works():
@@ -519,15 +587,11 @@ def render_stats():
 
 
 def render_cta_band():
-    st.markdown(f"""
+    st.markdown("""
     <div class="fs-section">
         <div class="fs-ctaband">
             <h2>Your Financial Journey Starts Here.</h2>
             <p>Explore the market. Understand the data. Build a smarter investment path.</p>
-            <div class="fs-ctaband-btns">
-                <a class="fs-btn solid" href="{STOCK_APP_URL}" target="_self">Explore Markets</a>
-                <a class="fs-btn outline" href="{MF_APP_URL}" target="_self">Get Personalized Guidance</a>
-            </div>
         </div>
         <div class="fs-disclaimer">
             Educational &amp; informational platform only. Market data, projections and
@@ -536,6 +600,22 @@ def render_cta_band():
         </div>
     </div>
     """, unsafe_allow_html=True)
+
+    c1, c2 = st.columns(2, gap="medium")
+    with c1:
+        st.page_link(
+            "pages/stock_app.py",
+            label="Explore Markets",
+            icon="📈",
+            use_container_width=True,
+        )
+    with c2:
+        st.page_link(
+            "pages/mf_app.py",
+            label="Get Personalized Guidance",
+            icon="🤖",
+            use_container_width=True,
+        )
 
 
 def render_footer():
