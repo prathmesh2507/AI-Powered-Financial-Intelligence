@@ -12,8 +12,16 @@
 import streamlit as st
 
 # ── ROUTING CONSTANTS ───────────────────────────────────────
-STOCK_APP_URL = "https://global-stock-intelligence-dashboard-kt2yprnaklgpyef5ikcpcj.streamlit.app/"
-MF_APP_URL = "https://personalized-mutual-fund-advisor-mrbtzxaa2xfunen6tc9tme.streamlit.app/"
+from stock_app import render_stock_app
+from mf_app import render_mf_app
+
+# Internal page routing — no external Streamlit URLs.
+HOME_PAGE = "Home"
+STOCK_PAGE = "Stock Intelligence"
+MF_PAGE = "Mutual Fund Advisor"
+
+if "page" not in st.session_state:
+    st.session_state.page = HOME_PAGE
 
 # ── PAGE CONFIG ──────────────────────────────────────────────
 st.set_page_config(
@@ -379,7 +387,7 @@ def render_hero():
 
 
 def render_path_cards():
-    st.markdown(f"""
+    st.markdown("""
     <div class="fs-section" style="padding-top: 0.5rem;">
         <div class="fs-cards">
             <div class="fs-card purple">
@@ -394,10 +402,6 @@ def render_path_cards():
                     <span class="fs-chip">Interactive Charts</span>
                     <span class="fs-chip">Market Analytics</span>
                 </div>
-                <a class="fs-cta" href="{STOCK_APP_URL}" target="_self">
-                    Explore Stock Intelligence <span class="arrow">→</span>
-                </a>
-                <div class="fs-card-foot">For investors who want to analyze the market themselves.</div>
             </div>
             <div class="fs-card green">
                 <div class="fs-card-icon">🤖</div>
@@ -411,15 +415,22 @@ def render_path_cards():
                     <span class="fs-chip">Fund Recommendations</span>
                     <span class="fs-chip">Wealth Projection</span>
                 </div>
-                <a class="fs-cta" href="{MF_APP_URL}" target="_self">
-                    Start AI Recommendation <span class="arrow">→</span>
-                </a>
-                <div class="fs-card-foot">For users who want guidance instead of manually analyzing markets.</div>
             </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
+    c1, c2 = st.columns(2)
+    with c1:
+        if st.button("📈  Explore Stock Intelligence  →", key="home_stock", use_container_width=True, type="primary"):
+            st.session_state.page = STOCK_PAGE
+            st.rerun()
+        st.caption("For investors who want to analyze the market themselves.")
+    with c2:
+        if st.button("🤖  Start AI Recommendation  →", key="home_mf", use_container_width=True):
+            st.session_state.page = MF_PAGE
+            st.rerun()
+        st.caption("For users who want guidance instead of manually analyzing markets.")
 
 def render_how_it_works():
     st.markdown("""
@@ -519,15 +530,11 @@ def render_stats():
 
 
 def render_cta_band():
-    st.markdown(f"""
+    st.markdown("""
     <div class="fs-section">
         <div class="fs-ctaband">
             <h2>Your Financial Journey Starts Here.</h2>
             <p>Explore the market. Understand the data. Build a smarter investment path.</p>
-            <div class="fs-ctaband-btns">
-                <a class="fs-btn solid" href="{STOCK_APP_URL}" target="_self">Explore Markets</a>
-                <a class="fs-btn outline" href="{MF_APP_URL}" target="_self">Get Personalized Guidance</a>
-            </div>
         </div>
         <div class="fs-disclaimer">
             Educational &amp; informational platform only. Market data, projections and
@@ -537,6 +544,15 @@ def render_cta_band():
     </div>
     """, unsafe_allow_html=True)
 
+    c1, c2 = st.columns(2)
+    with c1:
+        if st.button("Explore Markets", key="cta_stock", use_container_width=True, type="primary"):
+            st.session_state.page = STOCK_PAGE
+            st.rerun()
+    with c2:
+        if st.button("Get Personalized Guidance", key="cta_mf", use_container_width=True):
+            st.session_state.page = MF_PAGE
+            st.rerun()
 
 def render_footer():
     st.markdown("""
@@ -549,14 +565,49 @@ def render_footer():
     """, unsafe_allow_html=True)
 
 
-# ── PAGE ASSEMBLY ────────────────────────────────────────────
+# ── PAGE ROUTING ─────────────────────────────────────────────
 
-render_nav()
-render_hero()
-render_path_cards()
-render_how_it_works()
-render_features()
-render_comparison()
-render_stats()
-render_cta_band()
-render_footer()
+def render_home_page():
+    render_nav()
+    render_hero()
+    render_path_cards()
+    render_how_it_works()
+    render_features()
+    render_comparison()
+    render_stats()
+    render_cta_band()
+    render_footer()
+
+
+def render_app_nav():
+    st.markdown("""
+    <div style="text-align:center; padding: 0.4rem 0 0.8rem;">
+        <div style="font-size:0.78rem; color:#6B7280; letter-spacing:.08em; text-transform:uppercase;">FinSight AI</div>
+    </div>
+    """, unsafe_allow_html=True)
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        if st.button("🏠 Home", key="nav_home", use_container_width=True):
+            st.session_state.page = HOME_PAGE
+            st.rerun()
+    with c2:
+        if st.button("📈 Stock Intelligence", key="nav_stock", use_container_width=True):
+            st.session_state.page = STOCK_PAGE
+            st.rerun()
+    with c3:
+        if st.button("💰 Mutual Fund Advisor", key="nav_mf", use_container_width=True):
+            st.session_state.page = MF_PAGE
+            st.rerun()
+    st.divider()
+
+
+page = st.session_state.page
+
+if page == HOME_PAGE:
+    render_home_page()
+elif page == STOCK_PAGE:
+    render_app_nav()
+    render_stock_app()
+else:
+    render_app_nav()
+    render_mf_app()
