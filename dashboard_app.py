@@ -4,16 +4,17 @@
 #   • stock_app.py  (Manual Mode — Stock Intelligence)
 #   • mf_app.py     (Automation Mode — MF Recommendation Engine)
 #
-# This file does NOT import, execute, or modify stock_app.py
-# or mf_app.py in any way. It only links out to their deployed
-# URLs. Stack: Streamlit only.
+# This file is the landing page for the Streamlit multipage app.
+# Navigation to stock_app.py and mf_app.py is handled with
+# st.switch_page(), so all three pages can live in one deployment.
+# Stack: Streamlit only.
 # ============================================================
 
 import streamlit as st
 
 # ── ROUTING CONSTANTS ───────────────────────────────────────
-STOCK_APP_URL = "pages/stock_app"
-MF_APP_URL = "pages/mf_app"
+STOCK_APP_PAGE = "pages/stock_app.py"
+MF_APP_PAGE = "pages/mf_app.py"
 
 # ── PAGE CONFIG ──────────────────────────────────────────────
 st.set_page_config(
@@ -379,7 +380,9 @@ def render_hero():
 
 
 def render_path_cards():
-    st.markdown(f"""
+    # Streamlit navigation must use st.switch_page() rather than ordinary
+    # HTML hrefs such as "pages/stock_app".
+    st.markdown("""
     <div class="fs-section" style="padding-top: 0.5rem;">
         <div class="fs-cards">
             <div class="fs-card purple">
@@ -394,11 +397,9 @@ def render_path_cards():
                     <span class="fs-chip">Interactive Charts</span>
                     <span class="fs-chip">Market Analytics</span>
                 </div>
-                <a class="fs-cta" href="{STOCK_APP_URL}" target="_self">
-                    Explore Stock Intelligence <span class="arrow">→</span>
-                </a>
                 <div class="fs-card-foot">For investors who want to analyze the market themselves.</div>
             </div>
+
             <div class="fs-card green">
                 <div class="fs-card-icon">🤖</div>
                 <div class="fs-card-label">Automation Mode</div>
@@ -411,15 +412,23 @@ def render_path_cards():
                     <span class="fs-chip">Fund Recommendations</span>
                     <span class="fs-chip">Wealth Projection</span>
                 </div>
-                <a class="fs-cta" href="{MF_APP_URL}" target="_self">
-                    Start AI Recommendation <span class="arrow">→</span>
-                </a>
                 <div class="fs-card-foot">For users who want guidance instead of manually analyzing markets.</div>
             </div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
+    # These are real Streamlit buttons, so they work correctly with the
+    # /pages/ multipage structure on both local and deployed Streamlit.
+    col1, col2 = st.columns(2, gap="large")
+
+    with col1:
+        if st.button("Explore Stock Intelligence  →", key="stock_nav", use_container_width=True):
+            st.switch_page(STOCK_APP_PAGE)
+
+    with col2:
+        if st.button("Start AI Recommendation  →", key="mf_nav", use_container_width=True):
+            st.switch_page(MF_APP_PAGE)
 
 def render_how_it_works():
     st.markdown("""
@@ -519,15 +528,11 @@ def render_stats():
 
 
 def render_cta_band():
-    st.markdown(f"""
+    st.markdown("""
     <div class="fs-section">
         <div class="fs-ctaband">
             <h2>Your Financial Journey Starts Here.</h2>
             <p>Explore the market. Understand the data. Build a smarter investment path.</p>
-            <div class="fs-ctaband-btns">
-                <a class="fs-btn solid" href="{STOCK_APP_URL}" target="_self">Explore Markets</a>
-                <a class="fs-btn outline" href="{MF_APP_URL}" target="_self">Get Personalized Guidance</a>
-            </div>
         </div>
         <div class="fs-disclaimer">
             Educational &amp; informational platform only. Market data, projections and
@@ -537,6 +542,15 @@ def render_cta_band():
     </div>
     """, unsafe_allow_html=True)
 
+    col1, col2 = st.columns(2, gap="large")
+
+    with col1:
+        if st.button("Explore Markets", key="cta_stock", use_container_width=True):
+            st.switch_page(STOCK_APP_PAGE)
+
+    with col2:
+        if st.button("Get Personalized Guidance", key="cta_mf", use_container_width=True):
+            st.switch_page(MF_APP_PAGE)
 
 def render_footer():
     st.markdown("""
