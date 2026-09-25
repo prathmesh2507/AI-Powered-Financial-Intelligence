@@ -12,7 +12,7 @@
 import streamlit as st
 
 # ── ROUTING CONSTANTS ───────────────────────────────────────
-STOCK_APP_URL = "https://global-stock-intelligence-dashboard-kt2yprnaklgpyef5ikcpcj.streamlit.app/"z
+STOCK_APP_URL = "https://global-stock-intelligence-dashboard-kt2yprnaklgpyef5ikcpcj.streamlit.app/"
 MF_APP_URL = "https://personalized-mutual-fund-advisor-mrbtzxaa2xfunen6tc9tme.streamlit.app/"
 
 # ── PAGE CONFIG ──────────────────────────────────────────────
